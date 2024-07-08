@@ -16,10 +16,24 @@ const SOURCE = {
 This is a good strategy when you want to cut CSS excesses or use a full-fledged app in another app without any interferences, especially when you want the content of the iframe to share state with its parent.`
 }
 
+const EDIT = {
+  description: [
+    [/section/, "tutorial"],
+    // Use lookbehind and lookahead to remove text
+    [/(?<=interference)s(?=, especially)/, ""],
+    // Replace the _end_ of the text to append text
+    [/$/, `
+
+Now read on.`]
+    ]
+}
+
 
 
 export const App = () => {
   const [ prompt, setPrompt ] = useState(BLANK)
+  const [ done, setDone ] = useState(false)
+  const [ edit, setEdit ] = useState()
 
 
   const startTyping = () => {
@@ -27,8 +41,16 @@ export const App = () => {
   }
 
 
-  const doneTyping = () => {
-    console.log("Done!")
+  const startEditing = () => {
+    setEdit(EDIT)
+  }
+
+
+  const doneAction = type => {
+    if (type) {
+      console.log("done", type);
+      setDone(type)
+    }
   }
 
 
@@ -36,18 +58,24 @@ export const App = () => {
     <>
       <AutoType
         text={SOURCE}
-        done={doneTyping}
+        done={doneAction}
       />
       <button
         onClick={startTyping}
-        type="submit"
       >
         Start Typing
+      </button>
+      <button
+        onClick={startEditing}
+        disabled={!done}
+      >
+        Edit
       </button>
       <AutoType
         text={prompt}
         autoType={[ "title", "description" ]}
-        done={doneTyping}
+        edit={edit}
+        done={doneAction}
       />
     </>
   )
