@@ -27,6 +27,10 @@
  *              or 600 wpm which is very probably faster than you
  *              can read and understand, and definitely 3x faster
  *              than you can type.
+ * 
+ * + pause:     Can be a positive integer number of milliseconds
+ *              to pause while moving from one field to the next
+ *              or between edits.
  *
  * + edit:      Can be an object with the format:
  *              { <string field name>: [
@@ -63,6 +67,7 @@ export const AutoType = ({
   text,
   autoType=[],
   speed=20,
+  pause=500,
   edit,
   done,
   className
@@ -77,13 +82,18 @@ export const AutoType = ({
   const [ changes,     setChanges ]     = useState([])
 
 
+  // Minimal check for usability of edit
+  const applyEdits = typeof edit === "object"
+
+
+  /** Called by useEffect when text or edit change */
   const prepareText = () => {
     if (!text) { return }
 
     const entries = Object.entries(text)
 
     const status = entries.reduce(( status, [ key, value ]) => {
-      if (autoType.indexOf(key) < 0 || edit) {
+      if (autoType.indexOf(key) < 0 || applyEdits) {
         // Consider that this text has already been typed
         status.done[key] = value
 
@@ -99,22 +109,26 @@ export const AutoType = ({
     setTyped(status.done)
     setTodo(status.todo)
 
-    if (edit) {
+    if (applyEdits) {
       startEditing()
     }
   }
 
 
+  /** Called by prepareText */
   const startEditing = () => {
     const edits = Object.entries(edit)
-    setEdits(edits)        // [[ <field>, <changes> ], ... ]
+    // [[ <field>, <changes> ], ... ]
+    setEdits(edits)
     prepareNextField(edits.shift())
   }
 
 
+  /** Called by startEditing and doNextEdit */
   const prepareNextField = delta => {
     if (!delta) {
-      return done && done("editing")
+      typeof done === "function" && done("editing")
+      return
     }
 
     setField(delta[0])
@@ -122,6 +136,7 @@ export const AutoType = ({
   }
 
 
+  /** Called by useEffect when `changes` changes */
   const doNextEdit = () => {
     const edit = changes.shift()
 
@@ -138,23 +153,28 @@ export const AutoType = ({
       [field]: text.replace(regex, replacement)
     })
 
-    setTimeout(() => setChanges([ ...changes ]), 500)
+    setTimeout(() => setChanges([ ...changes ]), pause)
   }
 
 
+  /** Called by useEffect when todo changes */
   const startTyping = () => {
-    const next = Object.entries(todo)[0]
+    const next = Object.entries(todo)[0]    
+
     if (!next) {
-      return done && done(started && "typing")
+      started && typeof done === "function" && done("typing")
+      setCharsToType([]) // apparently necessary with long pause
+      return
     }
 
     setField(next[0])
     setCharsToType(next[1].split(""))
 
-    setTimeout(() => setIndex(0), 500)
+    setTimeout(() => setIndex(0), pause)
   }
 
 
+  /** Called by useEffect when type changes */
   const type = () => {
     if (index < 0) { return }
 

@@ -35,13 +35,12 @@ export const App = () => {
   const [ prompt, setPrompt ] = useState(BLANK)
   const [ edit, setEdit ] = useState()
   const [ busy, setBusy ] = useState(false)
-  
-
+    
 
   const startTyping = () => {
     if (busy) { return }
 
-    setBusy(true)
+    setBusy("typing")
     setEdit("")
     setPrompt({ ...SOURCE }) // clone SOURCE to trigger re-render
   }
@@ -50,7 +49,7 @@ export const App = () => {
   const startEditing = () => {
     if (busy) { return }
     
-    setBusy(true)
+    setBusy("editing")
     setPrompt({ ...SOURCE }) // clone SOURCE to trigger re-render
     setEdit(EDIT)
   }
@@ -59,7 +58,7 @@ export const App = () => {
   const doneAction = type => {
     if (type) {
       setBusy(false)
-      console.log("done", type) // DO SOMETHING MORE INTERESTING
+      console.log("done:", type); // DO SOMETHING MORE INTERESTING
     }
   }
 
@@ -84,6 +83,8 @@ export const App = () => {
       <AutoType
         text={prompt}
         autoType={[ "title", "description" ]}
+        speed={1}
+        pause={250}
         edit={edit}
         done={doneAction}
         className="autotype"
