@@ -24,3 +24,16 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+pre {
+  border: 1px solid white;
+  min-height: 1em;
+  width: 200px;
+  text-wrap: wrap;
+  font-family: Times, 'Times New Roman', serif;
+}
+
+pre[name=ticket],
+pre[name=title] {
+  font-weight: bold;
+}

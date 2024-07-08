@@ -6,45 +6,37 @@
 import React, { useState } from 'react'
 import { AutoType } from './AutoType'
 
-const SOURCE = [
-`All in the merry month of May`,`
-the green buds all were swelling`,`
-Sweet William on his death bed lay`,`
-for love of Barbra Allen.`
-]
+
+const BLANK = { ticket: "", title: "", description: "" }
+const SOURCE = {
+  ticket: "MVT-01",
+  title: "Embed YouTube Video",
+  description: `In this section, we’ll explore rendering a React app or component in an iframe.
+
+This is a good strategy when you want to cut CSS excesses or use a full-fledged app in another app without any interferences, especially when you want the content of the iframe to share state with its parent.`
+}
+
 
 
 export const App = () => {
-  const [ line, setLine ] = useState(0)
-  const [ text, setText ] = useState(SOURCE[line])
-  const [ prompt, setPrompt ] = useState("")  
-  
-  
-  const updateText = ({ target }) => {
-    setText(target.value)
-  }
+  const [ prompt, setPrompt ] = useState(BLANK)
 
 
   const startTyping = () => {
-    setPrompt(text)
+    setPrompt(SOURCE)
   }
 
 
-  const doneTyping = () => {  
-    const next = line + 1
-    setLine(next)
-    setText(SOURCE[next] || "")
+  const doneTyping = () => {
+    console.log("Done!")
   }
 
 
   return (
     <>
-      <input
-        type="text"
-        id="text"
-        name="text"
-        value={text}
-        onChange={updateText}
+      <AutoType
+        text={SOURCE}
+        done={doneTyping}
       />
       <button
         onClick={startTyping}
@@ -54,6 +46,7 @@ export const App = () => {
       </button>
       <AutoType
         text={prompt}
+        autoType={[ "title", "description" ]}
         done={doneTyping}
       />
     </>
