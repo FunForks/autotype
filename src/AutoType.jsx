@@ -21,14 +21,14 @@ export const AutoType = ({
   autoType=[],
   done
 }) => {
-  const [ todo, setTodo ] = useState({})
-  const [ field, setField ] = useState("")
-  const [ index, setIndex ] = useState(-1)
+  const [ todo,        setTodo ]        = useState({})
+  const [ field,       setField ]       = useState("")
+  const [ index,       setIndex ]       = useState(-1)
   const [ charsToType, setCharsToType ] = useState([])
-  const [ typed, setTyped ] = useState({})
-  const [ started, setStarted ] = useState(false)
-  const [ edits, setEdits ] = useState([])
-  const [ changes, setChanges ] = useState([])
+  const [ typed,       setTyped ]       = useState({})
+  const [ started,     setStarted ]     = useState(false)
+  const [ edits,       setEdits ]       = useState([])
+  const [ changes,     setChanges ]     = useState([])
 
 
   const prepareText = () => {
@@ -62,11 +62,11 @@ export const AutoType = ({
   const startEditing = () => {
     const edits = Object.entries(edit)
     setEdits(edits)        // [[ <field>, <changes> ], ... ]
-    prepareField(edits[0])
+    prepareNextField(edits.shift())
   }
 
 
-  const prepareField = delta => {
+  const prepareNextField = delta => {
     if (!delta) {
       return done("editing")
     }
@@ -80,10 +80,8 @@ export const AutoType = ({
     const edit = changes.shift()
 
     if (!edit) {
-      // Remove the changes that have been completed
-      edits.shift()
       // Treat the next field
-      return prepareField(edits[0])
+      return prepareNextField(edits.shift())
     }
 
     const [ regex, replacement ] = edit
