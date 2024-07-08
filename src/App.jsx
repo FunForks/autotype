@@ -32,16 +32,17 @@ Now read on.`]
 
 export const App = () => {
   const [ prompt, setPrompt ] = useState(BLANK)
-  const [ done, setDone ] = useState(false)
   const [ edit, setEdit ] = useState()
 
 
   const startTyping = () => {
-    setPrompt(SOURCE)
+    setEdit("")
+    setPrompt({ ...SOURCE }) // clone SOURCE to trigger re-render
   }
 
 
   const startEditing = () => {
+    setPrompt({ ...SOURCE }) // clone SOURCE to trigger re-render
     setEdit(EDIT)
   }
 
@@ -49,7 +50,6 @@ export const App = () => {
   const doneAction = type => {
     if (type) {
       console.log("done", type);
-      setDone(type)
     }
   }
 
@@ -67,7 +67,6 @@ export const App = () => {
       </button>
       <button
         onClick={startEditing}
-        disabled={!done}
       >
         Edit
       </button>

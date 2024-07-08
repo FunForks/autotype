@@ -31,7 +31,6 @@ export const AutoType = ({
   const [ changes, setChanges ] = useState([])
 
 
-
   const prepareText = () => {
     if (!text) { return }
 
@@ -73,7 +72,7 @@ export const AutoType = ({
     }
 
     setField(delta[0])
-    setChanges(delta[1])
+    setChanges([ ...delta[1] ])
   }
 
 
@@ -153,6 +152,8 @@ export const AutoType = ({
   useEffect(startTyping, [todo])
   // ... continue until the text is all typed
   useEffect(type, [index])
+
+  // Treat edits, if there are any
   useEffect(doNextEdit, [changes])
 
 
