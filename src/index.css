@@ -25,25 +25,50 @@ body {
   align-items: center;
 }
 
+div.controls {
+  padding: 1em;
+  padding-top: 0;
+  border: 1px solid #fff3;
+  margin-bottom: 1em;
+
+  h1 {
+    text-align: center;
+    text-decoration: underline;
+  }
+}
+
+div.buttons {
+  display: flex;
+
+  button {
+    flex: 1
+  }
+}
+
 div.autotype {
-  background-color: #303;
+  background-color: #000;
 
   pre {
-    padding: 0.25em;
-    border: 1px inset #969;
-    margin: 0;
+    width: 100%;
+    min-height: 2.2em;
+    box-sizing: border-box;
+    padding: 0.25em 1em;
+    border: 1px inset #999;
+    margin: 0.25em 0;
+
+    &:last-child {
+      height: 7em;
+    }
   }
 }
 
 pre {
-  border: 1px solid white;
-  min-height: 1em;
   width: 200px;
   text-wrap: wrap;
   font-family: Times, 'Times New Roman', serif;
 }
 
-pre[name=ticket],
-pre[name=title] {
+pre[name=first],
+pre[name=last] {
   font-weight: bold;
 }

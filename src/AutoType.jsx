@@ -27,7 +27,7 @@
  *              or 600 wpm which is very probably faster than you
  *              can read and understand, and definitely 3x faster
  *              than you can type.
- * 
+ *
  * + pause:     Can be a positive integer number of milliseconds
  *              to pause while moving from one field to the next
  *              or between edits.
@@ -143,8 +143,14 @@ export const AutoType = ({
     const edit = changes.shift()
 
     if (!edit) {
-      // Treat the next field
-      return prepareNextField(edits.shift())
+      if (applyEdits) {
+        // Treat the next field, if there is one
+        return prepareNextField(edits.shift())
+
+      } else {
+        // There was no edit prop
+        return
+      }
     }
 
     const [ regex, replacement ] = edit
@@ -161,7 +167,7 @@ export const AutoType = ({
 
   /** Called by useEffect when todo changes */
   const startTyping = () => {
-    const next = Object.entries(todo)[0]    
+    const next = Object.entries(todo)[0]
 
     if (!next) {
       started && typeof done === "function" && done("typing")
