@@ -1,25 +1,71 @@
 /**
- * src/AutoType.jsx
+ * AutoType.jsx
+ *
+ * This component accepts a `type` prop which must have the
+ * format:
+ *   { <string field name>: <string>, ... }
+ *
+ * NO SANITIZATION IS PERFORMED *
+ *
+ * It will create a <div> containing a <pre> element for
+ * every key/value pair. Each <pre> element will have a `name`
+ * property whose value matches the given field name.
+ *
+ * Strings can be template strings which include new lines.
+ *
+ * Other props are permitted:
+ *
+ * + autoType:  Can be an array of string field names. The text
+ *              of the <pre> elements with those names will be
+ *              typed at `speed` (see below)
+ *
+ * + speed:     Can be a positive integer. The default speed of 20
+ *              (milliseconds per letter) reates an average delay
+ *              of 20 ms per character
+ *              or 50 chars a second
+ *              or 10 words / second
+ *              or 600 wpm which is very probably faster than you
+ *              can read and understand, and definitely 3x faster
+ *              than you can type.
+ *
+ * + edit:      Can be an object with the format:
+ *              { <string field name>: [
+ *                  [ <regex>, <replacement string> ],
+ *                  ...
+ *                ]
+ *              }
+ *              This will run the following (pseudo-code) for each
+ *              entry. There will be a short pause between each
+ *              update
+ *
+ *                 <field.text>.replace(regex, replacement)
+ *
+ *              To replace every occurence of a string, use the
+ *              /regex/g global flag.
+ *              To delete text, use a lookaround regex and an
+ *              empty string.
+ *              To prepend text, use the regex /^/
+ *              To append text, use the regex /$/
+ *
+ * + done:      Can be a function which will be called with the
+ *              argument "typing" or "editing", when the given
+ *              action is complete.
+ *
+ * + className: Can be a string className that will be applied to
+ *              the container <div>
  */
 
 
 import React, { useState, useEffect } from 'react'
 
 
-const MIN = 1//0
-const VAR = 2//0
-// Creates an average delay of 20 ms,
-// or 50 chars a second
-// or 10 words / second
-// or 600 wpm which is very probably faster than you can read
-// and understand, and definitely 3x faster than you can type.
-
-
 export const AutoType = ({
   text,
-  edit,
   autoType=[],
-  done
+  speed=20,
+  edit,
+  done,
+  className
 }) => {
   const [ todo,        setTodo ]        = useState({})
   const [ field,       setField ]       = useState("")
@@ -68,7 +114,7 @@ export const AutoType = ({
 
   const prepareNextField = delta => {
     if (!delta) {
-      return done("editing")
+      return done && done("editing")
     }
 
     setField(delta[0])
@@ -99,7 +145,7 @@ export const AutoType = ({
   const startTyping = () => {
     const next = Object.entries(todo)[0]
     if (!next) {
-      return done(started && "typing")
+      return done && done(started && "typing")
     }
 
     setField(next[0])
@@ -125,7 +171,7 @@ export const AutoType = ({
     const done = typed[field] + nextChar
     setTyped({ ...typed, [field]: done })
 
-    const delay = Math.floor(Math.random() * VAR) + MIN
+    const delay = Math.floor(Math.random() * speed) + speed / 2
     setTimeout(() => {
       setIndex(index + 1)
     }, delay)
@@ -156,7 +202,7 @@ export const AutoType = ({
 
 
   return (
-    <div>
+    <div className={className}>
       {fields}
     </div>
   )

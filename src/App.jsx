@@ -17,6 +17,7 @@ This is a good strategy when you want to cut CSS excesses or use a full-fledged 
 }
 
 const EDIT = {
+  title: [[ /^/, "1. "]],
   description: [
     [/section/, "tutorial"],
     // Use lookbehind and lookahead to remove text
@@ -33,15 +34,23 @@ Now read on.`]
 export const App = () => {
   const [ prompt, setPrompt ] = useState(BLANK)
   const [ edit, setEdit ] = useState()
+  const [ busy, setBusy ] = useState(false)
+  
 
 
   const startTyping = () => {
+    if (busy) { return }
+
+    setBusy(true)
     setEdit("")
     setPrompt({ ...SOURCE }) // clone SOURCE to trigger re-render
   }
 
 
   const startEditing = () => {
+    if (busy) { return }
+    
+    setBusy(true)
     setPrompt({ ...SOURCE }) // clone SOURCE to trigger re-render
     setEdit(EDIT)
   }
@@ -49,7 +58,8 @@ export const App = () => {
 
   const doneAction = type => {
     if (type) {
-      console.log("done", type);
+      setBusy(false)
+      console.log("done", type) // DO SOMETHING MORE INTERESTING
     }
   }
 
@@ -58,15 +68,16 @@ export const App = () => {
     <>
       <AutoType
         text={SOURCE}
-        done={doneAction}
       />
       <button
         onClick={startTyping}
+        disabled={busy}
       >
         Start Typing
       </button>
       <button
         onClick={startEditing}
+        disabled={busy}
       >
         Edit
       </button>
@@ -75,6 +86,7 @@ export const App = () => {
         autoType={[ "title", "description" ]}
         edit={edit}
         done={doneAction}
+        className="autotype"
       />
     </>
   )

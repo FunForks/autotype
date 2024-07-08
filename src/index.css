@@ -25,6 +25,16 @@ body {
   align-items: center;
 }
 
+div.autotype {
+  background-color: #303;
+
+  pre {
+    padding: 0.25em;
+    border: 1px inset #969;
+    margin: 0;
+  }
+}
+
 pre {
   border: 1px solid white;
   min-height: 1em;
