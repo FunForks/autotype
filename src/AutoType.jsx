@@ -5,7 +5,7 @@
  * format:
  *   { <string field name>: <string>, ... }
  *
- * NO SANITIZATION IS PERFORMED *
+ * NO SANITY CHECKING IS PERFORMED *
  *
  * It will create a <div> containing a <pre> element for
  * every key/value pair. Each <pre> element will have a `name`
@@ -46,6 +46,8 @@
  *
  *              To replace every occurence of a string, use the
  *              /regex/g global flag.
+ *              To insert text, use a lookbehind for the preceding
+ *              word(s).
  *              To delete text, use a lookaround regex and an
  *              empty string.
  *              To prepend text, use the regex /^/

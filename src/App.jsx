@@ -17,9 +17,13 @@ This is a good strategy when you want to cut CSS excesses or use a full-fledged 
 }
 
 const EDIT = {
+  // Replace the beginning of the text to prepend text
   title: [[ /^/, "1. "]],
   description: [
+    // Simple replacement
     [/section/, "tutorial"],
+    // Use lookbehind or lookahead to insert text
+    [/(?<=iframe.)/, " This is going to be fun."],
     // Use lookbehind and lookahead to remove text
     [/(?<=interference)s(?=, especially)/, ""],
     // Replace the _end_ of the text to append text
@@ -83,7 +87,7 @@ export const App = () => {
       <AutoType
         text={prompt}
         autoType={[ "title", "description" ]}
-        speed={1}
+        speed={50}
         pause={250}
         edit={edit}
         done={doneAction}
