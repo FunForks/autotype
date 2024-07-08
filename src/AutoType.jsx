@@ -1,7 +1,7 @@
 /**
  * AutoType.jsx
  *
- * This component accepts a `type` prop which must have the
+ * This component accepts a `text` prop which must have the
  * format:
  *   { <string field name>: <string>, ... }
  *

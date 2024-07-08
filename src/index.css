@@ -56,7 +56,12 @@ div.autotype {
     border: 1px inset #999;
     margin: 0.25em 0;
 
-    &:last-child {
+    &[name=first],
+    &[name=last] {
+      font-weight: bold;
+    }
+
+    &[name=address] {
       height: 7em;
     }
   }
@@ -66,9 +71,4 @@ pre {
   width: 200px;
   text-wrap: wrap;
   font-family: Times, 'Times New Roman', serif;
-}
-
-pre[name=first],
-pre[name=last] {
-  font-weight: bold;
 }
